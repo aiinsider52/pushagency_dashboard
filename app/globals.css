@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html.dark {
+  color-scheme: dark;
+  --color-bg: #08090f;
+  --color-surface: rgba(18, 20, 32, 0.72);
+  --color-surface2: rgba(24, 26, 42, 0.55);
+  --color-surface3: rgba(32, 34, 54, 0.85);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-bright: rgba(255, 255, 255, 0.14);
+  --color-ink: #f0f1f8;
+  --color-muted: #7a8199;
+  --color-hover: rgba(255, 255, 255, 0.04);
+  --color-shine: rgba(255, 255, 255, 0.06);
+  --color-track: rgba(255, 255, 255, 0.06);
+  --color-scrollbar: rgba(255, 255, 255, 0.1);
+  --color-scrollbar-hover: rgba(255, 255, 255, 0.18);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 0 0 1px rgba(139, 123, 255, 0.25), 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px rgba(139, 123, 255, 0.35);
+  --shadow-glow-sm: 0 0 20px rgba(139, 123, 255, 0.2);
+  --bg-gradient:
+    radial-gradient(ellipse 80% 60% at 100% -10%, rgba(139, 123, 255, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 50% at -5% 100%, rgba(255, 122, 69, 0.14), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(179, 92, 255, 0.06), transparent 60%);
+  --hero-kpi: linear-gradient(135deg, rgba(139, 123, 255, 0.22) 0%, rgba(179, 92, 255, 0.12) 50%, rgba(255, 122, 69, 0.08) 100%);
+}
+
+html.light {
+  color-scheme: light;
+  --color-bg: #f5f6fb;
+  --color-surface: rgba(255, 255, 255, 0.88);
+  --color-surface2: rgba(251, 251, 254, 0.75);
+  --color-surface3: rgba(255, 255, 255, 0.95);
+  --color-border: rgba(26, 29, 46, 0.08);
+  --color-border-bright: rgba(26, 29, 46, 0.14);
+  --color-ink: #1a1d2e;
+  --color-muted: #8a90a6;
+  --color-hover: rgba(26, 29, 46, 0.04);
+  --color-shine: rgba(255, 255, 255, 0.65);
+  --color-track: rgba(26, 29, 46, 0.06);
+  --color-scrollbar: rgba(26, 29, 46, 0.12);
+  --color-scrollbar-hover: rgba(26, 29, 46, 0.22);
+  --shadow-card: 0 1px 2px rgba(26, 29, 46, 0.04), 0 8px 24px rgba(26, 29, 46, 0.06);
+  --shadow-card-hover: 0 0 0 1px rgba(109, 94, 252, 0.2), 0 12px 32px rgba(26, 29, 46, 0.1);
+  --shadow-glow: 0 10px 40px rgba(109, 94, 252, 0.2);
+  --shadow-glow-sm: 0 4px 20px rgba(109, 94, 252, 0.15);
+  --bg-gradient:
+    radial-gradient(900px 600px at 100% 0%, rgba(179, 92, 255, 0.14), transparent 55%),
+    radial-gradient(900px 600px at 0% 100%, rgba(109, 94, 252, 0.12), transparent 55%),
+    radial-gradient(700px 500px at 50% 50%, rgba(255, 92, 168, 0.06), transparent 60%);
+  --hero-kpi: linear-gradient(135deg, rgba(109, 94, 252, 0.1) 0%, rgba(179, 92, 255, 0.08) 50%, rgba(255, 92, 168, 0.06) 100%);
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+body {
+  background-color: var(--color-bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .glass {
+    @apply bg-surface backdrop-blur-xl border border-border shadow-card;
+  }
+
+  .glass-card {
+    @apply relative overflow-hidden rounded-2xl bg-surface backdrop-blur-xl border border-border shadow-card;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--color-shine) 0%, transparent 45%);
+    pointer-events: none;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #8b7bff 0%, #b35cff 45%, #ff7a45 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-dot {
+    box-shadow: 0 0 12px currentColor;
+  }
+
+  .row-hover {
+    @apply hover:bg-hover border border-transparent hover:border-border transition-all;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
