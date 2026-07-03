@@ -17,9 +17,10 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { Card, Stat, Badge, Avatar, Delta, Segmented, LoadingSkeleton, Modal } from "./ui";
+import { Card, KpiCard, Badge, Avatar, Delta, Segmented, LoadingSkeleton, Modal } from "./ui";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import OrbitRing from "./OrbitRing";
 import { useTheme } from "./ThemeProvider";
 import { getChartTheme } from "@/lib/theme";
 import { PageId, isPageId, PAGE_META } from "@/lib/nav";
@@ -29,16 +30,16 @@ import { AutomationSummary, PipelineSummary, FinanceSummary, ActivityRow } from 
 const fetcher = (u: string) => fetch(u).then((r) => r.json());
 
 const STATUS_COLORS: Record<string, string> = {
-  backlog: "#5a6078",
-  "to do": "#7a8199",
-  "in progress": "#5eb8ff",
-  "design done": "#b35cff",
-  "internal review": "#fbbf24",
-  "client review": "#ff5ca8",
-  approved: "#34d399",
-  "on hold": "#f87171",
-  delivered: "#2dd4bf",
-  Closed: "#8b7bff",
+  backlog: "#b6bccb",
+  "to do": "#8b90a8",
+  "in progress": "#2d9cdb",
+  "design done": "#9b51e0",
+  "internal review": "#f5a524",
+  "client review": "#ff7a5c",
+  approved: "#27ae60",
+  "on hold": "#eb5757",
+  delivered: "#14c4b8",
+  Closed: "#5b4fe8",
 };
 
 function ms(n: number | null) {
@@ -135,34 +136,34 @@ export default function Dashboard() {
 
   const kpiRow = auto && pipe && fin && (
     <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <Stat label="Виконань n8n" featured value={auto.totalRuns.toLocaleString()} sub={`${auto.activeWorkflows} активних воркфлоу`} delta={<Delta value={runsDelta} />} sparkline={runsSpark} icon={<IconGear />} />
-      <Stat label="Success rate" tone={auto.successRate > 80 ? "ok" : auto.successRate > 50 ? "warn" : "err"} value={`${auto.successRate}%`} sub={`${auto.error.toLocaleString()} помилок`} sparkline={successSpark} icon={<IconCheck />} />
-      <Stat label="Задач у воронці" tone="brand" value={pipe.total} sub={`${pipe.byStatus.length} статусів`} icon={<IconFolder />} />
-      <Stat label="Виручка" tone="ok" value={`₴${fin.revenue.toLocaleString()}`} sub={`avg ₴${fin.avgCheck.toLocaleString()} · ${fin.closedCount} закрито`} sparkline={revSpark} icon={<IconMoney />} />
+      <KpiCard variant="blue" label="Виконань n8n" value={auto.totalRuns.toLocaleString()} sub={`${auto.activeWorkflows} активних WF`} delta={<Delta value={runsDelta} />} sparkline={runsSpark} icon={<IconGear />} />
+      <KpiCard variant="mint" label="Success rate" value={`${auto.successRate}%`} sub={`${auto.error.toLocaleString()} помилок`} sparkline={successSpark} icon={<IconCheck />} />
+      <KpiCard variant="lavender" label="Задач у воронці" value={pipe.total} sub={`${pipe.byStatus.length} статусів`} icon={<IconFolder />} />
+      <KpiCard variant="peach" label="Виручка" value={`₴${fin.revenue.toLocaleString()}`} sub={`avg ₴${fin.avgCheck.toLocaleString()}`} sparkline={revSpark} icon={<IconMoney />} />
     </section>
   );
 
   const automationChart = auto && (
     <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Card title="Активність автоматизації" className="lg:col-span-2" glow right={<Segmented options={["Тиждень", "Місяць", "Все"]} value={period} onChange={setPeriod} />}>
+      <Card title="Активність автоматизації" className="lg:col-span-2" right={<Segmented options={["Тиждень", "Місяць", "Все"]} value={period} onChange={setPeriod} />}>
         <ResponsiveContainer width="100%" height={260}>
           <AreaChart data={timeline} margin={{ left: -12, right: 8, top: 8 }}>
             <defs>
               <linearGradient id="g-ok" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#34d399" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                <stop offset="0%" stopColor={chart.success} stopOpacity={0.25} />
+                <stop offset="100%" stopColor={chart.success} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="g-err" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#f87171" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#f87171" stopOpacity={0} />
+                <stop offset="0%" stopColor={chart.error} stopOpacity={0.2} />
+                <stop offset="100%" stopColor={chart.error} stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="4 4" stroke={chart.gridStroke} vertical={false} />
             <XAxis dataKey="day" tick={{ fill: chart.tickFill, fontSize: 11 }} tickFormatter={(d) => d.slice(5)} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: chart.tickFill, fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={chart.tooltipStyle} />
-            <Area type="monotone" dataKey="error" stroke="#f87171" strokeWidth={2} fill="url(#g-err)" name="помилки" isAnimationActive={false} />
-            <Area type="monotone" dataKey="success" stroke="#34d399" strokeWidth={2.5} fill="url(#g-ok)" name="успіх" isAnimationActive={false} />
+            <Area type="monotone" dataKey="success" stroke={chart.success} strokeWidth={2.5} fill="url(#g-ok)" name="успіх" isAnimationActive={false} />
+            <Area type="monotone" dataKey="error" stroke={chart.error} strokeWidth={2} fill="url(#g-err)" name="помилки" isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </Card>
@@ -187,7 +188,7 @@ export default function Dashboard() {
           </thead>
           <tbody>
             {filteredWorkflows.map((w) => {
-              const tone = w.successRate > 80 ? "#34d399" : w.successRate > 50 ? "#fbbf24" : "#f87171";
+              const tone = w.successRate > 80 ? chart.success : w.successRate > 50 ? "#f5a524" : chart.error;
               return (
                 <tr key={w.workflowId} className="border-t border-border hover:bg-hover transition-colors group">
                   <td className="py-3 pl-2"><span className="font-mono text-[10px] font-semibold text-brand bg-brand/10 border border-brand/20 rounded-lg px-2 py-1">{w.code}</span></td>
@@ -196,7 +197,7 @@ export default function Dashboard() {
                   <td className="py-3 pl-6">
                     <div className="flex items-center gap-2">
                       <div className="w-20 h-1.5 rounded-full bg-track overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${w.successRate}%`, background: tone, boxShadow: `0 0 8px ${tone}66` }} />
+                        <div className="h-full rounded-full" style={{ width: `${w.successRate}%`, background: tone }} />
                       </div>
                       <span className="tabular-nums text-xs font-medium" style={{ color: tone }}>{w.successRate}%</span>
                     </div>
@@ -222,7 +223,7 @@ export default function Dashboard() {
             <PieChart>
               <Pie data={pipe.byStatus} dataKey="count" nameKey="status" cx="50%" cy="50%" innerRadius={72} outerRadius={105} paddingAngle={3} isAnimationActive={false}>
                 {pipe.byStatus.map((s) => (
-                  <Cell key={s.status} stroke={chart.pieStroke} strokeWidth={3} fill={STATUS_COLORS[s.status] ?? "#8b7bff"} />
+                  <Cell key={s.status} stroke={chart.pieStroke} strokeWidth={3} fill={STATUS_COLORS[s.status] ?? chart.brand} />
                 ))}
               </Pie>
               <Tooltip contentStyle={chart.tooltipStyle} />
@@ -238,7 +239,7 @@ export default function Dashboard() {
         <div className="flex flex-wrap gap-x-3 gap-y-2 mt-3">
           {pipe.byStatus.map((s) => (
             <span key={s.status} className="inline-flex items-center gap-1.5 text-[11px] text-muted">
-              <span className="w-2 h-2 rounded-full glow-dot" style={{ background: STATUS_COLORS[s.status] ?? "#8b7bff", color: STATUS_COLORS[s.status] ?? "#8b7bff" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s.status] ?? chart.brand }} />
               {s.status} · {s.count}
             </span>
           ))}
@@ -256,7 +257,7 @@ export default function Dashboard() {
                   <span className="text-xs text-muted tabular-nums">{a.total} задач</span>
                 </div>
                 <div className="h-2 rounded-full bg-track overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-brand to-brand2 shadow-glow-sm" style={{ width: `${(a.total / maxLoad) * 100}%` }} />
+                  <div className="h-full rounded-full bg-brand" style={{ width: `${(a.total / maxLoad) * 100}%` }} />
                 </div>
               </div>
               {a.overdue > 0 && <span className="text-[10px] font-semibold text-err bg-err/10 border border-err/20 rounded-full px-2 py-0.5 shrink-0">{a.overdue} простр.</span>}
@@ -270,13 +271,13 @@ export default function Dashboard() {
   const financeSection = fin && (
     <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div className="lg:col-span-2">
-        <Card title="Виручка по місяцях" glow>
+        <Card title="Виручка по місяцях">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={fin.byMonth} margin={{ left: -12, right: 8, top: 8 }}>
               <defs>
                 <linearGradient id="g-rev" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8b7bff" />
-                  <stop offset="100%" stopColor="#b35cff" stopOpacity={0.4} />
+                  <stop offset="0%" stopColor={chart.brand} />
+                  <stop offset="100%" stopColor={chart.brand2} stopOpacity={0.5} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="4 4" stroke={chart.gridStroke} vertical={false} />
@@ -330,33 +331,34 @@ export default function Dashboard() {
         return (
           <>
             {kpiRow}
+            <Card title="Orbit · здоров'я автоматизації">
+              <OrbitRing successRate={auto.successRate} workflows={auto.perWorkflow} />
+            </Card>
             {automationChart}
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {pipe && (
-                <Card title="Воронка · коротко">
-                  <div className="flex flex-wrap gap-2">
-                    {pipe.byStatus.map((s) => (
-                      <span key={s.status} className="inline-flex items-center gap-1.5 text-xs bg-hover border border-border rounded-full px-3 py-1.5">
-                        <span className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s.status] ?? "#8b7bff" }} />
-                        {s.status} <b className="text-ink">{s.count}</b>
-                      </span>
-                    ))}
-                  </div>
-                  <button type="button" onClick={() => setPage("pipeline")} className="mt-4 text-xs text-brand hover:underline">
-                    Відкрити воронку →
-                  </button>
-                </Card>
-              )}
+              <Card title="Воронка · коротко">
+                <div className="flex flex-wrap gap-2">
+                  {pipe.byStatus.map((s) => (
+                    <span key={s.status} className="inline-flex items-center gap-1.5 text-xs bg-surface3 border border-border rounded-full px-3 py-1.5">
+                      <span className="w-2 h-2 rounded-full" style={{ background: STATUS_COLORS[s.status] ?? chart.brand }} />
+                      {s.status} <b className="text-ink">{s.count}</b>
+                    </span>
+                  ))}
+                </div>
+                <button type="button" onClick={() => setPage("pipeline")} className="mt-4 text-xs font-semibold text-brand hover:underline">
+                  Відкрити воронку →
+                </button>
+              </Card>
               <Card title="Останні події">
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {act.rows.slice(0, 6).map((r, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs py-1.5">
+                    <div key={i} className="flex items-center gap-2 text-sm py-1.5 px-2 rounded-xl hover:bg-hover transition-colors">
                       <Badge result={r.result} />
-                      <span className="truncate text-muted">{r.taskName || r.details}</span>
+                      <span className="truncate text-ink/80 flex-1">{r.taskName || r.details}</span>
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={() => setPage("activity")} className="mt-3 text-xs text-brand hover:underline">
+                <button type="button" onClick={() => setPage("activity")} className="mt-3 text-xs font-semibold text-brand hover:underline">
                   Весь feed →
                 </button>
               </Card>
@@ -366,12 +368,10 @@ export default function Dashboard() {
       case "automation":
         return (
           <>
-            {kpiRow && (
-              <section className="grid grid-cols-2 gap-4 max-w-xl">
-                <Stat label="Виконань n8n" featured value={auto.totalRuns.toLocaleString()} sub={`${auto.activeWorkflows} WF`} delta={<Delta value={runsDelta} />} sparkline={runsSpark} />
-                <Stat label="Success rate" tone={auto.successRate > 80 ? "ok" : auto.successRate > 50 ? "warn" : "err"} value={`${auto.successRate}%`} sub={`${auto.error} помилок`} sparkline={successSpark} />
-              </section>
-            )}
+            <section className="grid grid-cols-2 gap-4 max-w-xl">
+              <KpiCard variant="blue" label="Виконань n8n" value={auto.totalRuns.toLocaleString()} sub={`${auto.activeWorkflows} WF`} delta={<Delta value={runsDelta} />} sparkline={runsSpark} />
+              <KpiCard variant="mint" label="Success rate" value={`${auto.successRate}%`} sub={`${auto.error} помилок`} sparkline={successSpark} />
+            </section>
             {automationChart}
             {workflowTable}
           </>
@@ -379,9 +379,9 @@ export default function Dashboard() {
       case "pipeline":
         return (
           <>
-            <section className="grid grid-cols-2 lg:grid-cols-3 gap-4 max-w-2xl">
-              <Stat label="Задач у воронці" tone="brand" value={pipe.total} sub={`${pipe.byStatus.length} статусів`} icon={<IconFolder />} />
-              <Stat label="Виконавців" tone="brand" value={pipe.byAssignee.length} sub={`${pipe.byAssignee.reduce((a, x) => a + x.overdue, 0)} прострочено`} />
+            <section className="grid grid-cols-2 gap-4 max-w-lg">
+              <KpiCard variant="lavender" label="Задач у воронці" value={pipe.total} sub={`${pipe.byStatus.length} статусів`} icon={<IconFolder />} />
+              <KpiCard variant="lavender" label="Виконавців" value={pipe.byAssignee.length} sub={`${pipe.byAssignee.reduce((a, x) => a + x.overdue, 0)} прострочено`} />
             </section>
             {pipelineSection}
           </>
@@ -389,9 +389,9 @@ export default function Dashboard() {
       case "finance":
         return (
           <>
-            <section className="grid grid-cols-2 lg:grid-cols-3 gap-4 max-w-2xl">
-              <Stat label="Виручка" tone="ok" value={`₴${fin.revenue.toLocaleString()}`} sub={`${fin.closedCount} закрито`} sparkline={revSpark} icon={<IconMoney />} />
-              <Stat label="Середній чек" tone="ok" value={`₴${fin.avgCheck.toLocaleString()}`} />
+            <section className="grid grid-cols-2 gap-4 max-w-lg">
+              <KpiCard variant="peach" label="Виручка" value={`₴${fin.revenue.toLocaleString()}`} sub={`${fin.closedCount} закрито`} sparkline={revSpark} icon={<IconMoney />} />
+              <KpiCard variant="peach" label="Середній чек" value={`₴${fin.avgCheck.toLocaleString()}`} />
             </section>
             {financeSection}
           </>
@@ -407,8 +407,8 @@ export default function Dashboard() {
     <div className="min-h-screen flex">
       <Sidebar active={page} onChange={setPage} onHelp={() => setHelpOpen(true)} />
 
-      <div className="flex-1 min-w-0 p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
-        <div className="max-w-[1200px] mx-auto">
+      <div className="flex-1 min-w-0 p-5 md:p-8 pb-24 lg:pb-8">
+        <div className="max-w-[1280px] mx-auto">
           <Topbar
             page={page}
             period={period}
@@ -427,11 +427,11 @@ export default function Dashboard() {
           />
 
           {mockSources.length > 0 && (
-            <div className="bg-warn/8 border border-warn/20 text-warn rounded-2xl px-4 py-3 text-sm flex items-center gap-2.5 mb-6 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-warn glow-dot shrink-0" />
+            <div className="bg-warn/10 border border-warn/20 text-warn rounded-[16px] px-4 py-3 text-sm flex items-center gap-2.5 mb-6">
+              <span className="w-2 h-2 rounded-full bg-warn shrink-0" />
               <span>
-                Демо-режим: <b className="text-ink">{mockSources.join(", ")}</b> на мок-даних. Заповни{" "}
-                <code className="font-mono text-xs bg-warn/10 px-1.5 py-0.5 rounded border border-warn/20">.env.local</code> для живих даних.
+                Демо-режим: <b className="text-ink">{mockSources.join(", ")}</b>. Заповни{" "}
+                <code className="font-mono text-xs bg-surface3 px-1.5 py-0.5 rounded border border-border">.env.local</code>
               </span>
             </div>
           )}

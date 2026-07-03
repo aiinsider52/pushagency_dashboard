@@ -6,27 +6,27 @@ export const PAGE_META: Record<
 > = {
   overview: {
     label: "Огляд",
-    title: "Привіт, команда",
+    title: "Automation Control",
     subtitle: "Загальний огляд автоматизації та продакшну",
   },
   automation: {
     label: "Автоматизація",
-    title: "Автоматизація n8n",
+    title: "Automation",
     subtitle: "Виконання, помилки та статистика по воркфлоу",
   },
   pipeline: {
     label: "Воронка",
-    title: "Продакшн-воронка",
+    title: "Pipeline",
     subtitle: "Статуси задач та навантаження команди",
   },
   finance: {
     label: "Фінанси",
-    title: "Фінанси",
+    title: "Finance",
     subtitle: "Виручка та закриті проєкти з ClickUp",
   },
   activity: {
     label: "Активність",
-    title: "Живий feed",
+    title: "Activity",
     subtitle: "Події з Central Activity Log",
   },
 };

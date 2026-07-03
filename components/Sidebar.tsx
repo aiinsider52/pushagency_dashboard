@@ -1,30 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { PageId } from "@/lib/nav";
 import { IconBolt, IconChart, IconGrid, IconLayers, IconPulse } from "./icons";
 
-const SECTIONS: {
-  label: string;
-  items: { id: PageId; icon: typeof IconGrid; label: string }[];
-}[] = [
-  {
-    label: "Головне",
-    items: [
-      { id: "overview", icon: IconGrid, label: "Огляд" },
-      { id: "automation", icon: IconBolt, label: "Автоматизація" },
-    ],
-  },
-  {
-    label: "Продакшн",
-    items: [
-      { id: "pipeline", icon: IconLayers, label: "Воронка" },
-      { id: "finance", icon: IconChart, label: "Фінанси" },
-      { id: "activity", icon: IconPulse, label: "Активність" },
-    ],
-  },
+const NAV: { id: PageId; icon: typeof IconGrid; label: string }[] = [
+  { id: "overview", icon: IconGrid, label: "Огляд" },
+  { id: "automation", icon: IconBolt, label: "Автоматизація" },
+  { id: "pipeline", icon: IconLayers, label: "Воронка" },
+  { id: "finance", icon: IconChart, label: "Фінанси" },
+  { id: "activity", icon: IconPulse, label: "Активність" },
 ];
-
-export const ALL_NAV_ITEMS = SECTIONS.flatMap((s) => s.items);
 
 type SidebarProps = {
   active: PageId;
@@ -33,52 +19,69 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ active, onChange, onHelp }: SidebarProps) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <>
-      <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-border bg-surface2/80 backdrop-blur-xl py-6 px-4">
-        <div className="flex items-center gap-3 px-2 mb-8">
-          <div className="relative w-10 h-10 rounded-2xl bg-brand grid place-items-center shadow-glow">
-            <span className="text-white text-lg font-bold">P</span>
-            <span className="absolute inset-0 rounded-2xl bg-brand opacity-40 blur-md -z-10" />
+      {/* Desktop: slim + expand on hover */}
+      <aside
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => setExpanded(false)}
+        className={`hidden lg:flex shrink-0 flex-col py-5 border-r border-border transition-all duration-300 ease-out overflow-hidden ${
+          expanded ? "w-[220px] px-3" : "w-[72px] px-2 items-center"
+        }`}
+        style={{ background: "var(--sidebar-bg)" }}
+      >
+        <div className={`flex items-center gap-3 mb-8 ${expanded ? "px-2" : "justify-center"}`}>
+          <div className="w-10 h-10 rounded-2xl bg-brand grid place-items-center shrink-0 shadow-soft">
+            <span className="text-white font-bold text-lg">P</span>
           </div>
-          <div>
-            <div className="font-bold text-ink text-[15px] leading-tight">PushDash</div>
-            <div className="text-[11px] text-muted">Automation Control</div>
-          </div>
+          {expanded && (
+            <div className="overflow-hidden whitespace-nowrap">
+              <div className="font-bold text-ink text-[15px]">PushDash</div>
+              <div className="text-[10px] text-muted">Orbit Control</div>
+            </div>
+          )}
         </div>
 
-        <nav className="flex-1 space-y-6">
-          {SECTIONS.map((section) => (
-            <div key={section.label}>
-              <div className="text-[10px] font-semibold uppercase tracking-widest text-muted/60 px-2 mb-2">
-                {section.label}
-              </div>
-              <div className="space-y-0.5">
-                {section.items.map((item) => (
-                  <NavButton key={item.id} item={item} active={active} onSelect={onChange} />
-                ))}
-              </div>
-            </div>
-          ))}
+        <nav className="flex-1 space-y-1 w-full">
+          {NAV.map((item) => {
+            const Icon = item.icon;
+            const isActive = active === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onChange(item.id)}
+                title={item.label}
+                className={`w-full flex items-center gap-3 rounded-xl transition-all ${
+                  expanded ? "px-3 py-2.5" : "p-2.5 justify-center"
+                } ${isActive ? "text-brand font-semibold" : "text-muted hover:text-ink hover:bg-hover"}`}
+                style={isActive ? { background: "var(--sidebar-active)" } : undefined}
+              >
+                <Icon className="w-5 h-5 shrink-0" />
+                {expanded && <span className="text-sm whitespace-nowrap">{item.label}</span>}
+              </button>
+            );
+          })}
         </nav>
 
-        <div className="mt-4 rounded-2xl bg-hero-kpi border border-brand/20 p-4">
-          <div className="text-xs font-semibold text-ink mb-1">Потрібна допомога?</div>
-          <p className="text-[11px] text-muted leading-relaxed mb-3">
-            Перевір n8n executions або Central Log для діагностики.
-          </p>
-          <button
-            type="button"
-            onClick={onHelp}
-            className="w-full py-2 rounded-xl bg-brand text-white text-xs font-semibold shadow-glow-sm hover:brightness-110 transition-all"
-          >
-            Документація
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onHelp}
+          title="Документація"
+          className={`mt-4 w-full flex items-center gap-2 rounded-xl text-xs font-medium text-muted hover:text-brand hover:bg-hover transition-colors ${
+            expanded ? "px-3 py-2.5" : "p-2.5 justify-center"
+          }`}
+        >
+          <span className="text-base">?</span>
+          {expanded && <span>Допомога</span>}
+        </button>
       </aside>
 
-      <nav className="lg:hidden fixed bottom-4 left-4 right-4 z-50 flex justify-around bg-surface3/95 backdrop-blur-xl border border-border rounded-2xl py-2 px-1 shadow-card">
-        {ALL_NAV_ITEMS.map((item) => {
+      {/* Mobile bottom nav */}
+      <nav className="lg:hidden fixed bottom-4 left-4 right-4 z-50 flex justify-around bg-surface border border-border rounded-2xl py-2 px-1 shadow-card">
+        {NAV.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
           return (
@@ -86,9 +89,7 @@ export default function Sidebar({ active, onChange, onHelp }: SidebarProps) {
               key={item.id}
               type="button"
               onClick={() => onChange(item.id)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all ${
-                isActive ? "text-brand" : "text-muted"
-              }`}
+              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl ${isActive ? "text-brand" : "text-muted"}`}
             >
               <Icon className="w-5 h-5" />
               <span className="text-[9px] font-medium">{item.label}</span>
@@ -97,32 +98,5 @@ export default function Sidebar({ active, onChange, onHelp }: SidebarProps) {
         })}
       </nav>
     </>
-  );
-}
-
-function NavButton({
-  item,
-  active,
-  onSelect,
-}: {
-  item: (typeof ALL_NAV_ITEMS)[number];
-  active: PageId;
-  onSelect: (id: PageId) => void;
-}) {
-  const Icon = item.icon;
-  const isActive = active === item.id;
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(item.id)}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-        isActive
-          ? "bg-brand/15 text-brand border border-brand/25 shadow-glow-sm"
-          : "text-muted hover:text-ink hover:bg-white/[0.04] border border-transparent"
-      }`}
-    >
-      <Icon className={`w-[18px] h-[18px] ${isActive ? "text-brand" : "text-muted"}`} />
-      {item.label}
-    </button>
   );
 }

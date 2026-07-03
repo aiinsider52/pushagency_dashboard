@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Outfit, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
-const display = Outfit({
+const display = Plus_Jakarta_Sans({
   subsets: ["latin", "latin-ext"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700", "800"],
@@ -20,11 +20,11 @@ export const metadata: Metadata = {
   description: "Push Agency · n8n automation, pipeline, finance & activity",
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem('pushdash-theme')||'dark';document.documentElement.classList.add(t)}catch(e){document.documentElement.classList.add('dark')}})()`;
+const themeScript = `(function(){try{var t=localStorage.getItem('pushdash-theme')||'light';document.documentElement.classList.add(t)}catch(e){document.documentElement.classList.add('light')}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uk" className={`${display.variable} ${mono.variable} dark`} suppressHydrationWarning>
+    <html lang="uk" className={`${display.variable} ${mono.variable} light`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

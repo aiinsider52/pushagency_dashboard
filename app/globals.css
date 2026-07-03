@@ -2,56 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Orbit Light (default) ── */
+html.light {
+  color-scheme: light;
+  --color-bg: #f4f6fc;
+  --color-surface: #ffffff;
+  --color-surface2: #ffffff;
+  --color-surface3: #f8f9fd;
+  --color-border: rgba(26, 29, 46, 0.07);
+  --color-border-bright: rgba(26, 29, 46, 0.12);
+  --color-ink: #1a1d2e;
+  --color-muted: #8b90a8;
+  --color-hover: rgba(91, 79, 232, 0.05);
+  --color-track: #eef0f6;
+  --color-scrollbar: rgba(26, 29, 46, 0.1);
+  --color-scrollbar-hover: rgba(26, 29, 46, 0.18);
+  --shadow-card: 0 1px 2px rgba(26, 29, 46, 0.04), 0 12px 40px rgba(26, 29, 46, 0.06);
+  --shadow-card-hover: 0 4px 24px rgba(91, 79, 232, 0.12);
+  --shadow-soft: 0 8px 32px rgba(26, 29, 46, 0.05);
+  --bg-gradient:
+    radial-gradient(ellipse 70% 50% at 95% -5%, rgba(91, 79, 232, 0.1), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 0% 100%, rgba(255, 122, 92, 0.08), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(155, 81, 224, 0.04), transparent 60%);
+  --tint-blue: #e8f4fe;
+  --tint-mint: #e6faf0;
+  --tint-lavender: #f0edff;
+  --tint-peach: #fff0eb;
+  --sidebar-bg: #ffffff;
+  --sidebar-active: rgba(91, 79, 232, 0.1);
+}
+
+/* ── Orbit Night ── */
 html.dark {
   color-scheme: dark;
-  --color-bg: #08090f;
-  --color-surface: rgba(18, 20, 32, 0.72);
-  --color-surface2: rgba(24, 26, 42, 0.55);
-  --color-surface3: rgba(32, 34, 54, 0.85);
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-bright: rgba(255, 255, 255, 0.14);
+  --color-bg: #0f1117;
+  --color-surface: #1a1d28;
+  --color-surface2: #1a1d28;
+  --color-surface3: #22252f;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-bright: rgba(255, 255, 255, 0.12);
   --color-ink: #f0f1f8;
   --color-muted: #7a8199;
   --color-hover: rgba(255, 255, 255, 0.04);
-  --color-shine: rgba(255, 255, 255, 0.06);
   --color-track: rgba(255, 255, 255, 0.06);
   --color-scrollbar: rgba(255, 255, 255, 0.1);
   --color-scrollbar-hover: rgba(255, 255, 255, 0.18);
-  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0, 0, 0, 0.45);
-  --shadow-card-hover: 0 0 0 1px rgba(139, 123, 255, 0.25), 0 12px 40px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 40px rgba(139, 123, 255, 0.35);
-  --shadow-glow-sm: 0 0 20px rgba(139, 123, 255, 0.2);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 0 0 1px rgba(91, 79, 232, 0.2), 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
   --bg-gradient:
-    radial-gradient(ellipse 80% 60% at 100% -10%, rgba(139, 123, 255, 0.22), transparent 55%),
-    radial-gradient(ellipse 70% 50% at -5% 100%, rgba(255, 122, 69, 0.14), transparent 50%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(179, 92, 255, 0.06), transparent 60%);
-  --hero-kpi: linear-gradient(135deg, rgba(139, 123, 255, 0.22) 0%, rgba(179, 92, 255, 0.12) 50%, rgba(255, 122, 69, 0.08) 100%);
-}
-
-html.light {
-  color-scheme: light;
-  --color-bg: #f5f6fb;
-  --color-surface: rgba(255, 255, 255, 0.88);
-  --color-surface2: rgba(251, 251, 254, 0.75);
-  --color-surface3: rgba(255, 255, 255, 0.95);
-  --color-border: rgba(26, 29, 46, 0.08);
-  --color-border-bright: rgba(26, 29, 46, 0.14);
-  --color-ink: #1a1d2e;
-  --color-muted: #8a90a6;
-  --color-hover: rgba(26, 29, 46, 0.04);
-  --color-shine: rgba(255, 255, 255, 0.65);
-  --color-track: rgba(26, 29, 46, 0.06);
-  --color-scrollbar: rgba(26, 29, 46, 0.12);
-  --color-scrollbar-hover: rgba(26, 29, 46, 0.22);
-  --shadow-card: 0 1px 2px rgba(26, 29, 46, 0.04), 0 8px 24px rgba(26, 29, 46, 0.06);
-  --shadow-card-hover: 0 0 0 1px rgba(109, 94, 252, 0.2), 0 12px 32px rgba(26, 29, 46, 0.1);
-  --shadow-glow: 0 10px 40px rgba(109, 94, 252, 0.2);
-  --shadow-glow-sm: 0 4px 20px rgba(109, 94, 252, 0.15);
-  --bg-gradient:
-    radial-gradient(900px 600px at 100% 0%, rgba(179, 92, 255, 0.14), transparent 55%),
-    radial-gradient(900px 600px at 0% 100%, rgba(109, 94, 252, 0.12), transparent 55%),
-    radial-gradient(700px 500px at 50% 50%, rgba(255, 92, 168, 0.06), transparent 60%);
-  --hero-kpi: linear-gradient(135deg, rgba(109, 94, 252, 0.1) 0%, rgba(179, 92, 255, 0.08) 50%, rgba(255, 92, 168, 0.06) 100%);
+    radial-gradient(ellipse 70% 50% at 95% -5%, rgba(91, 79, 232, 0.15), transparent 55%),
+    radial-gradient(ellipse 60% 45% at 0% 100%, rgba(255, 122, 92, 0.08), transparent 50%);
+  --tint-blue: rgba(45, 156, 219, 0.12);
+  --tint-mint: rgba(39, 174, 96, 0.12);
+  --tint-lavender: rgba(155, 81, 224, 0.12);
+  --tint-peach: rgba(255, 122, 92, 0.12);
+  --sidebar-bg: #14161f;
+  --sidebar-active: rgba(91, 79, 232, 0.18);
 }
 
 html,
@@ -64,7 +71,7 @@ body {
   background-color: var(--color-bg);
   background-image: var(--bg-gradient);
   background-attachment: fixed;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 * {
@@ -72,59 +79,50 @@ body {
 }
 
 @layer components {
-  .glass {
-    @apply bg-surface backdrop-blur-xl border border-border shadow-card;
+  .orbit-card {
+    @apply relative overflow-hidden rounded-[20px] bg-surface border border-border shadow-card transition-shadow duration-200;
   }
 
-  .glass-card {
-    @apply relative overflow-hidden rounded-2xl bg-surface backdrop-blur-xl border border-border shadow-card;
-  }
-
-  .glass-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--color-shine) 0%, transparent 45%);
-    pointer-events: none;
+  .orbit-card:hover {
+    box-shadow: var(--shadow-card-hover);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #8b7bff 0%, #b35cff 45%, #ff7a45 100%);
+    background: linear-gradient(135deg, #5b4fe8 0%, #9b51e0 50%, #ff7a5c 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  .glow-dot {
-    box-shadow: 0 0 12px currentColor;
-  }
-
-  .row-hover {
-    @apply hover:bg-hover border border-transparent hover:border-border transition-all;
+  .shimmer {
+    background: linear-gradient(90deg, var(--color-track) 25%, var(--color-hover) 50%, var(--color-track) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
   }
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-::-webkit-scrollbar-thumb {
-  background: var(--color-scrollbar);
-  border-radius: 8px;
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out forwards;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-scrollbar-hover);
-}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-scrollbar); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
