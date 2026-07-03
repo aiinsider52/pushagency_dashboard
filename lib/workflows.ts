@@ -1,7 +1,8 @@
 // Maps n8n workflow IDs to human labels for the Push Agency automation stack.
 export const WORKFLOWS: Record<string, { code: string; name: string }> = {
   yoYt5RdJ04bbsV8Z: { code: "WF-00", name: "Central Activity Log" },
-  YC0myfdiXpVOkcL4: { code: "WF-01", name: "Fibery → ClickUp Sync" },
+  YC0myfdiXpVOkcL4: { code: "WF-01", name: "Fibery → ClickUp Sync (archived)" },
+  YMkqU3EpZt2b6xpy: { code: "WF-01", name: "Fibery (Clients beta) → ClickUp Sync" },
   qCM1xdi5HDQVPXZg: { code: "WF-02", name: "Daily Sync Check" },
   "8YDSDU3YLMTl5MQn": { code: "WF-03", name: "Brief Validation" },
   Z9TSzf8QdTKjk6bt: { code: "WF-04", name: "SLA Monitoring" },
