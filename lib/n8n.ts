@@ -147,18 +147,24 @@ function aggregate(execs: Execution[], totalCount: number): AutomationSummary {
   const success = execs.filter((e) => e.status === "success").length;
   const error = execs.filter((e) => e.status === "error" || e.status === "crashed").length;
 
-  const dayMap = new Map<string, { success: number; error: number }>();
+  // Adaptive bucketing: if the sampled executions span <2 days (high-volume
+  // scheduled workflows fill the 200-exec window fast), bucket by HOUR so the
+  // chart shows a curve; otherwise bucket by DAY for a multi-day view.
+  const daysSpan = new Set(execs.map((e) => e.startedAt.slice(0, 10))).size;
+  const byHour = daysSpan < 3;
+  const bucketMap = new Map<string, { success: number; error: number }>();
   for (const e of execs) {
-    const day = e.startedAt.slice(0, 10);
-    if (!dayMap.has(day)) dayMap.set(day, { success: 0, error: 0 });
-    const d = dayMap.get(day)!;
+    // hour key "MM-DD HH:00" or day key "MM-DD"
+    const key = byHour ? `${e.startedAt.slice(5, 10)} ${e.startedAt.slice(11, 13)}:00` : e.startedAt.slice(5, 10);
+    if (!bucketMap.has(key)) bucketMap.set(key, { success: 0, error: 0 });
+    const d = bucketMap.get(key)!;
     if (e.status === "success") d.success++;
     else if (e.status === "error" || e.status === "crashed") d.error++;
   }
-  const timeline = Array.from(dayMap.entries())
+  const timeline = Array.from(bucketMap.entries())
     .map(([day, v]) => ({ day, ...v }))
     .sort((a, b) => a.day.localeCompare(b.day))
-    .slice(-14);
+    .slice(byHour ? -48 : -14);
 
   const recentErrors = execs
     .filter((e) => e.status === "error" || e.status === "crashed")

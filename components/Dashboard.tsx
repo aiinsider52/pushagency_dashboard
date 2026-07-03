@@ -159,7 +159,7 @@ export default function Dashboard() {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="4 4" stroke={chart.gridStroke} vertical={false} />
-            <XAxis dataKey="day" tick={{ fill: chart.tickFill, fontSize: 11 }} tickFormatter={(d) => d.slice(5)} axisLine={false} tickLine={false} />
+            <XAxis dataKey="day" tick={{ fill: chart.tickFill, fontSize: 11 }} tickFormatter={(d) => (d.includes(" ") ? d.split(" ")[1] : d)} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: chart.tickFill, fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={chart.tooltipStyle} />
             <Area type="monotone" dataKey="success" stroke={chart.success} strokeWidth={2.5} fill="url(#g-ok)" name="успіх" isAnimationActive={false} />
