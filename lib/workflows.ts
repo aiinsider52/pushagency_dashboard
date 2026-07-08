@@ -15,6 +15,7 @@ export const WORKFLOWS: Record<string, { code: string; name: string }> = {
   jyJhqouDJ3RRbWuj: { code: "WF-11", name: "Task Summary for Designer" },
   "2rQsqRyvkglRIXFp": { code: "WF-12", name: "Workload Monitor" },
   dVYSySUWXQtMBRCH: { code: "WF-13", name: "Telegram Approval" },
+  VcL6Jj3cxmhzHG65: { code: "WF-14", name: "Fibery Done → Telegram Alert" },
 };
 
 export function wfLabel(id: string): { code: string; name: string } {

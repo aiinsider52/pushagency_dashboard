@@ -18,7 +18,9 @@ function mapExec(e: any): Execution {
     workflowId: e.workflowId,
     status: e.status,
     mode: e.mode,
-    startedAt: e.startedAt,
+    // n8n may return null startedAt for queued/waiting executions; fall back to
+    // createdAt/stoppedAt so downstream date math never sees null.
+    startedAt: e.startedAt ?? e.createdAt ?? e.stoppedAt ?? null,
     stoppedAt: e.stoppedAt ?? null,
   };
 }
@@ -112,6 +114,8 @@ async function fetchViaRest(limit = 250): Promise<{ execs: Execution[]; total: n
 }
 
 function aggregate(execs: Execution[], totalCount: number): AutomationSummary {
+  // Drop any execution still missing a timestamp so date math (slice) is safe.
+  execs = execs.filter((e) => typeof e.startedAt === "string" && e.startedAt);
   const byWf = new Map<string, Execution[]>();
   for (const e of execs) {
     if (!byWf.has(e.workflowId)) byWf.set(e.workflowId, []);

@@ -21,6 +21,7 @@ import { Card, KpiCard, Badge, Avatar, Delta, Segmented, LoadingSkeleton, Modal 
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import OrbitRing from "./OrbitRing";
+import RatesEditor from "./RatesEditor";
 import { useTheme } from "./ThemeProvider";
 import { getChartTheme } from "@/lib/theme";
 import { PageId, isPageId, PAGE_META } from "@/lib/nav";
@@ -325,6 +326,9 @@ export default function Dashboard() {
   );
 
   const pageContent = (() => {
+    // Rates editor is self-contained (fetches its own data) — render before the
+    // automation/pipeline/finance data guard so it works even while those load.
+    if (page === "rates") return <RatesEditor />;
     if (!auto || !pipe || !fin || !act) return null;
     switch (page) {
       case "overview":

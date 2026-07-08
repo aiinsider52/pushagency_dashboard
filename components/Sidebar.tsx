@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PageId } from "@/lib/nav";
-import { IconBolt, IconChart, IconGrid, IconLayers, IconPulse } from "./icons";
+import { IconBolt, IconChart, IconGrid, IconLayers, IconPulse, IconTag } from "./icons";
 
 const NAV: { id: PageId; icon: typeof IconGrid; label: string }[] = [
   { id: "overview", icon: IconGrid, label: "Огляд" },
@@ -10,6 +10,7 @@ const NAV: { id: PageId; icon: typeof IconGrid; label: string }[] = [
   { id: "pipeline", icon: IconLayers, label: "Воронка" },
   { id: "finance", icon: IconChart, label: "Фінанси" },
   { id: "activity", icon: IconPulse, label: "Активність" },
+  { id: "rates", icon: IconTag, label: "Тарифи" },
 ];
 
 type SidebarProps = {

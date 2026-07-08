@@ -1,4 +1,4 @@
-export type PageId = "overview" | "automation" | "pipeline" | "finance" | "activity";
+export type PageId = "overview" | "automation" | "pipeline" | "finance" | "activity" | "rates";
 
 export const PAGE_META: Record<
   PageId,
@@ -28,6 +28,11 @@ export const PAGE_META: Record<
     label: "Активність",
     title: "Activity",
     subtitle: "Події з Central Activity Log",
+  },
+  rates: {
+    label: "Тарифи",
+    title: "Тарифи",
+    subtitle: "Ставки для розрахунку цін — редагуються на льоту",
   },
 };
 
